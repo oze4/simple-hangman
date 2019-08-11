@@ -64,7 +64,10 @@ export default class App extends Component {
                     </div>
                 </div>
                 <div style={{ ...base, marginTop: '10px' }}>
-                    <button disabled={!this.state.isWinner} onClick={this.resetState}>RESET GAME</button>
+                    <button style={{ height: '30px' }} disabled={!this.state.isWinner} onClick={this.resetState}>RESET GAME</button>
+                </div>
+                <div style={{ ...base, marginTop: '10px' }}>
+                    <small><a href="https://github.com/oze4/simple-hangman" target="_blank" rel="noopener noreferrer">GitHub Repo</a></small>
                 </div>
             </div>
         );
