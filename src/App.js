@@ -46,8 +46,9 @@ export default class App extends Component {
         let stateCopy = JSON.parse(JSON.stringify(this.state));
         let matches = stateCopy.word.toUpperCase().match(new RegExp(letter, "g"))
         stateCopy.guessedLetters = [letter, ...stateCopy.guessedLetters]
-        stateCopy.correctGuesses += matches && matches.length > 0 ? matches.length : 0;
-        stateCopy.incorrectGuesses = stateCopy.guessedLetters.length - stateCopy.correctGuesses;
+        let matchedCount = matches && matches.length > 0 ? matches.length : 0;
+        stateCopy.correctGuesses += matchedCount;
+        stateCopy.incorrectGuesses += matchedCount === 0 ? 1 : 0;
         this.setState(stateCopy, () => this.checkGameStatus())
     }
 
