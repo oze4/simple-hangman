@@ -46,7 +46,6 @@ export default class App extends Component {
     }
 
     checkGameStatus = () => {
-        console.log(this.state);
         if (this.state.word.length === this.state.correctGuesses) {
             this.handleGameWin();
         }
@@ -58,7 +57,6 @@ export default class App extends Component {
     handleGuess = letter => {
         let matches = this.state.word.toUpperCase().match(new RegExp(letter, "g"))
         let matchesCount = matches ? matches.length : 0;
-        console.log(matchesCount);
         this.setState({
             guessedLetters: [letter, ...this.state.guessedLetters],
             correctGuesses: this.state.correctGuesses + matchesCount
