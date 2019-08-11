@@ -8,10 +8,10 @@ export default class HangmanWord extends Component {
         let lettersToShow = this.props.showLetters;
         return (
             <div>
-                {letters.map(letter => {
+                {letters.map((letter, index) => {
                     let ucase = letter.toUpperCase();
                     let show = lettersToShow.includes(ucase);
-                    return <HangmanLetter letter={ucase} isShown={show} />;
+                    return <HangmanLetter key={`${letter}_${index}`} letter={ucase} isShown={show} />;
                 })}
             </div>
         );

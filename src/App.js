@@ -9,7 +9,7 @@ import { base, style } from './css.js';
 export default class App extends Component {
     defaultState = {
         word: "",
-        color: 'red',
+        incorrectGuesses: 0,
         correctGuesses: 0,
         guessedLetters: [],
         tries: 8,
@@ -23,15 +23,10 @@ export default class App extends Component {
     resetState = () => {
         this.setState({
             ...this.defaultState,
-            key: Math.floor(Math.random() * 999)
-        }, () => this.getWord())
+            word: words[Math.floor(Math.random() * words.length)],
+            key: Math.floor(Math.random() * 999),
+        })
     }
-
-    getWord = () => {
-        this.setState({
-            word: words[Math.floor(Math.random() * words.length)]
-        });
-    };
 
     handleGameLoss = () => {
         alert("GAME OVER! :( YOU LOSE :(");
@@ -39,44 +34,33 @@ export default class App extends Component {
     }
 
     handleGameWin = () => {
-        this.setState({
-            color: 'green',
-            isWinner: true,
-        }, () => alert("WINNER WINNER WINNER!!!"))
+        this.setState({ isWinner: true }, () => alert("WINNER WINNER WINNER!!!"))
     }
 
     checkGameStatus = () => {
-        if (this.state.word.length === this.state.correctGuesses) {
-            this.handleGameWin();
-        }
-        else if (this.state.tries === this.state.guessedLetters.length) {
-            this.handleGameLoss();
-        }
+        if (this.state.word.length === this.state.correctGuesses) this.handleGameWin();
+        else if (this.state.tries === this.state.incorrectGuesses) this.handleGameLoss();
     }
 
     handleGuess = letter => {
-        let matches = this.state.word.toUpperCase().match(new RegExp(letter, "g"))
-        let matchesCount = matches ? matches.length : 0;
-        this.setState({
-            guessedLetters: [letter, ...this.state.guessedLetters],
-            correctGuesses: this.state.correctGuesses + matchesCount
-        }, () => this.checkGameStatus())
+        let stateCopy = JSON.parse(JSON.stringify(this.state));
+        let matches = stateCopy.word.toUpperCase().match(new RegExp(letter, "g"))
+        stateCopy.guessedLetters = [letter, ...stateCopy.guessedLetters]
+        stateCopy.correctGuesses += matches && matches.length > 0 ? matches.length : 0;
+        stateCopy.incorrectGuesses = stateCopy.guessedLetters.length - stateCopy.correctGuesses;
+        this.setState(stateCopy, () => this.checkGameStatus())
     }
 
     render() {
         return (
             <div>
                 <div style={style.wrapper}>
-                    <HangmanGuesses
-                        isWinner={this.state.isWinner}
-                        count={this.state.tries}
-                        usedGuesses={this.state.guessedLetters.length}
-                        color={this.state.color} />
+                    <HangmanGuesses count={this.state.tries} wrongGuessCount={this.state.incorrectGuesses} />
                 </div>
                 <div style={base}>
                     <div style={style.main}>
                         <HangmanWord word={this.state.word} showLetters={this.state.guessedLetters} />
-                        <HangmanAlphabet key={this.state.key} onClick={this.handleGuess} />
+                        <HangmanAlphabet key={this.state.key} onClick={this.handleGuess} disableAll={this.state.isWinner} />
                     </div>
                 </div>
                 <div style={{ ...base, marginTop: '10px' }}>

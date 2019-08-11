@@ -14,6 +14,8 @@ export default class HangmanAlphabet extends Component {
             let letter = String.fromCharCode(i);
             toRender.push(
                 <button
+                    disabled={this.props.disableAll}
+                    key={i}
                     onClick={(e) => this.handleClick(e, letter)}
                     style={style.btn}>
                     {letter}
